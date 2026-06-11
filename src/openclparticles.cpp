@@ -1,5 +1,4 @@
 ﻿// openclparticles.cpp : Defines the entry point for the application.
-//
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN 0
@@ -13,6 +12,7 @@
 #include <wx/timer.h>
 #endif
 
+#include <wx/dcbuffer.h>
 #include <CL/cl.hpp>
 
 enum
@@ -48,20 +48,22 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
-
 wxImagePanel::wxImagePanel(wxFrame* parent, wxString file, wxBitmapType format) :
     wxPanel(parent)
 {
     // load the file... ideally add a check to see if loading was successful
     image.LoadFile(file, format);
+    this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
-void wxImagePanel::paintEvent(wxPaintEvent& evt)
+void wxImagePanel::paintEvent(wxPaintEvent& evt) //RENDER LOOP IS HERE
 {
     // depending on your system you may need to look at double-buffered dcs
-    wxPaintDC dc(this);
+    wxPaintDC pdc(this);
+    wxAutoBufferedPaintDC dc(this);
     render(dc);
     //ADD DOUBLE BUFFER
+    //added
 }
 
 void wxImagePanel::paintNow()
@@ -197,16 +199,6 @@ bool MyApp::OnInit()
 {
     wxInitAllImageHandlers();
     MyFrame* frame = new MyFrame();
-    //pass wxImagePanel* drawPane;
-
-    wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    //frame = new wxFrame(NULL, wxID_ANY, wxT("Hello wxDC"), wxPoint(50, 50), wxSize(800, 600));
-
-    //// then simply create like this
-    //drawPane = new wxImagePanel(frame, wxT("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\teapot.xpm"), wxBITMAP_TYPE_XPM);
-    //sizer->Add(drawPane, 1, wxEXPAND);
-
-    frame->SetSizer(sizer);
 
     frame->Show(true);
 
