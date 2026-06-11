@@ -10,9 +10,11 @@ if (POLICY CMP0141)
 endif()
 
 project ("openclparticles")
+add_subdirectory(vendors)
+add_subdirectory(src)
 
 # Add source to this project's executable.
-add_executable (openclparticles "src/openclparticles.cpp" "src/openclparticles.h")
+
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET openclparticles PROPERTY CXX_STANDARD 20)
