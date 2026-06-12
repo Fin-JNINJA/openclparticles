@@ -13,8 +13,12 @@
 #endif
 
 #include <wx/dcbuffer.h>
-#include <CL/cl.hpp>
+
 #include <wx/generic/numdlgg.h>
+
+#include "../static/Image.xpm"
+#include "../static/teapot.xpm"
+
 
 using namespace std;
 
@@ -23,7 +27,7 @@ wxBitmap cat;
 
 struct particle {
     float size;
-    float x,y,vx,vy;
+    float x, y, vx, vy;
 
 };
 
@@ -42,6 +46,7 @@ class wxImagePanel : public wxPanel
 
 public:
     wxImagePanel(wxFrame* parent, wxString file, wxBitmapType format);
+    wxImagePanel(wxFrame* parent);
 
     void paintEvent(wxPaintEvent& evt);
     void paintNow();
@@ -69,9 +74,18 @@ wxImagePanel::wxImagePanel(wxFrame* parent, wxString file, wxBitmapType format) 
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
+wxImagePanel::wxImagePanel(wxFrame* parent) :
+    wxPanel(parent)
+{
+
+    image = wxBitmap(teapot_xpm);
+    this->SetBackgroundStyle(wxBG_STYLE_PAINT);
+}
+
 void wxImagePanel::paintEvent(wxPaintEvent& evt) //RENDER LOOP IS HERE
 {
-    image = cat;
+
+    //image = cat;
     wxPaintDC pdc(this);
     wxAutoBufferedPaintDC dc(this);
     render(dc);
@@ -151,7 +165,8 @@ END_EVENT_TABLE()
 MyFrame::MyFrame() : wxFrame((wxFrame*)NULL, -1, wxT("Hello wxDC"), wxPoint(50, 50), wxSize(1920, 1080))
 {
     wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
-    drawPane = new wxImagePanel(this, wxT("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\teapot.xpm"), wxBITMAP_TYPE_XPM);
+    //const char* test = "test";
+    drawPane = new wxImagePanel(this);
     sizer->Add(drawPane, 1, wxEXPAND);
     SetSizer(sizer);
 
@@ -210,10 +225,11 @@ bool MyApp::OnInit()
 {
     
     wxInitAllImageHandlers();
+    srand(static_cast <unsigned> (time(0)));
 
-    cat.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\Image.xpm", wxBITMAP_TYPE_XPM);
+    //cat.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\Image.xpm", wxBITMAP_TYPE_XPM);
     //tea.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\teapot.xpm", wxBITMAP_TYPE_XPM);
-
+    cat = wxBitmap(Image_xpm);
     
 
     MyFrame* frame = new MyFrame();
@@ -228,11 +244,16 @@ bool MyApp::OnInit()
         particles.resize(value);
     }
 
+    static int yLO = 900;
+    static int yHI = 1080;
+    static int xLO = 0;
+    static int xHI = 1920;
     for (auto& element : particles) {
-        element.x;
-        element.y;
-        element.vx;
-        element.vy;
+
+        element.x = xLO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (xHI - xLO)));
+        element.y = yLO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (yHI - yLO)));
+        element.vx = 0;
+        element.vy = 0;
     }
 
     return true;

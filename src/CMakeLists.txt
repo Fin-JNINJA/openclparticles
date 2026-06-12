@@ -2,9 +2,6 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_executable (openclparticles WIN32 "openclparticles.cpp"  )
 
-find_package(OpenCL REQUIRED)
-target_link_libraries(openclparticles PUBLIC OpenCL::OpenCL)
- 
 target_link_libraries(
     openclparticles
     PRIVATE
