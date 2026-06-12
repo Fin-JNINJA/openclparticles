@@ -15,6 +15,9 @@
 #include <wx/dcbuffer.h>
 #include <CL/cl.hpp>
 
+wxBitmap cat;
+//wxBitmap tea;
+
 enum
 {
     ID_Hello = 1
@@ -48,22 +51,20 @@ public:
     DECLARE_EVENT_TABLE()
 };
 
+
 wxImagePanel::wxImagePanel(wxFrame* parent, wxString file, wxBitmapType format) :
     wxPanel(parent)
 {
-    // load the file... ideally add a check to see if loading was successful
     image.LoadFile(file, format);
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 }
 
 void wxImagePanel::paintEvent(wxPaintEvent& evt) //RENDER LOOP IS HERE
 {
-    // depending on your system you may need to look at double-buffered dcs
+    image = cat;
     wxPaintDC pdc(this);
     wxAutoBufferedPaintDC dc(this);
     render(dc);
-    //ADD DOUBLE BUFFER
-    //added
 }
 
 void wxImagePanel::paintNow()
@@ -197,7 +198,13 @@ public:
 
 bool MyApp::OnInit()
 {
+    
     wxInitAllImageHandlers();
+
+    cat.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\Image.xpm", wxBITMAP_TYPE_XPM);
+    //tea.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\teapot.xpm", wxBITMAP_TYPE_XPM);
+
+
     MyFrame* frame = new MyFrame();
 
     frame->Show(true);
