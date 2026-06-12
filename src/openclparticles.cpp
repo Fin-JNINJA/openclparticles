@@ -14,16 +14,27 @@
 
 #include <wx/dcbuffer.h>
 #include <CL/cl.hpp>
+#include <wx/generic/numdlgg.h>
+
+using namespace std;
 
 wxBitmap cat;
-//wxBitmap tea;
+
+
+struct particle {
+    float size;
+    float x,y,vx,vy;
+
+};
+
+vector<particle> particles;
 
 enum
 {
     ID_Hello = 1
 };
 
-using namespace std;
+
 
 class wxImagePanel : public wxPanel
 {
@@ -50,7 +61,6 @@ public:
 
     DECLARE_EVENT_TABLE()
 };
-
 
 wxImagePanel::wxImagePanel(wxFrame* parent, wxString file, wxBitmapType format) :
     wxPanel(parent)
@@ -204,13 +214,28 @@ bool MyApp::OnInit()
     cat.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\Image.xpm", wxBITMAP_TYPE_XPM);
     //tea.LoadFile("C:\\Users\\finla\\Documents\\CodeProjects\\openclparticles\\static\\teapot.xpm", wxBITMAP_TYPE_XPM);
 
+    
 
     MyFrame* frame = new MyFrame();
 
     frame->Show(true);
 
+    wxNumberEntryDialog dialog(frame, "message", "prompt: ", "caption", 50, 0, LONG_MAX);
+
+    if (dialog.ShowModal() == wxID_OK) {
+        long value = dialog.GetValue();
+        wxMessageBox(wxString::Format("You entered: %ld", value));
+        particles.resize(value);
+    }
+
+    for (auto& element : particles) {
+        element.x;
+        element.y;
+        element.vx;
+        element.vy;
+    }
+
     return true;
 }
 
 wxIMPLEMENT_APP(MyApp);
-
